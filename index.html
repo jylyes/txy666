@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#08050f">
+  <title>老子拳头想喝血</title>
+  <style>
+    :root { color-scheme: dark; font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100svh; overflow: hidden; color: white; background: #08050f; }
+    body::before { content: ""; position: fixed; inset: -35%; background: radial-gradient(circle at 50% 50%, #a11b5840 0, #250b4930 25%, transparent 54%), conic-gradient(from 0deg, #ff27531a, #5c39ff25, #00eaff20, #ff27531a); filter: blur(55px); animation: rotate 18s linear infinite; }
+    body::after { content: ""; position: fixed; inset: 0; pointer-events: none; opacity: .42; background-image: radial-gradient(#ffffff9c 1px, transparent 1px); background-size: 51px 51px; mask-image: linear-gradient(to bottom, transparent, black 18%, black 72%, transparent); }
+    main { position: relative; z-index: 1; display: flex; min-height: 100svh; flex-direction: column; align-items: center; justify-content: center; padding: 36px 18px 56px; text-align: center; }
+    .halo { position: absolute; width: min(75vw, 680px); aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, #ff2b6860, #6221e522 45%, transparent 68%); filter: blur(18px); animation: breathe 3s ease-in-out infinite alternate; pointer-events: none; }
+    .title { position: relative; display: grid; gap: .04em; margin: 0 0 clamp(46px, 8vh, 90px); font-size: clamp(56px, 13vw, 180px); font-weight: 1000; line-height: 1.12; letter-spacing: .08em; text-indent: .08em; }
+    .title span { display: block; background: linear-gradient(100deg, #ff345d, #ffca36, #18f7df, #568bff, #f143ff, #ff345d); background-size: 300% 100%; color: transparent; background-clip: text; -webkit-background-clip: text; filter: drop-shadow(0 0 5px #ff7db5) drop-shadow(0 0 18px #b737ff) drop-shadow(0 0 36px #3e7cff); animation: rainbow 4s linear infinite, flicker 4.8s infinite; white-space: nowrap; }
+    .title span:last-child { font-size: 1.08em; animation-delay: -.8s; }
+    .start { position: relative; min-width: 210px; padding: 17px 55px; border: 2px solid #78ecff; border-radius: 999px; background: #100b20cc; color: #fff; font-family: inherit; font-size: clamp(25px, 5vw, 38px); font-weight: 900; line-height: 1; letter-spacing: .35em; text-indent: .35em; box-shadow: 0 0 12px #32eaff, inset 0 0 16px #22e9ff55, 0 0 35px #ad2bff88; cursor: pointer; transition: transform .18s, box-shadow .18s, background .18s; }
+    .start:hover, .start:focus-visible { transform: scale(1.07); background: #261048; box-shadow: 0 0 18px #40ecff, inset 0 0 24px #30eaff77, 0 0 60px #b82fff; outline: none; }
+    .start:active { transform: scale(.96); }
+    @keyframes rainbow { to { background-position: 300% 0; } }
+    @keyframes rotate { to { transform: rotate(360deg); } }
+    @keyframes breathe { to { transform: scale(1.2); opacity: .55; } }
+    @keyframes flicker { 0%, 94%, 98%, 100% { opacity: 1; } 95%, 97% { opacity: .83; } }
+    @media (max-width: 600px) { .title { font-size: clamp(52px, 15vw, 90px); } .start { min-width: 180px; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="halo" aria-hidden="true"></div>
+    <h1 class="title"><span>老子拳头</span><span>想喝血</span></h1>
+    <button class="start" type="button">开始</button>
+  </main>
+</body>
+</html>
+
