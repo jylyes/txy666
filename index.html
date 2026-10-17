@@ -25,6 +25,10 @@
     .fighter { position: absolute; bottom: 0; left: 27%; width: clamp(105px, 18vw, 170px); transform: translateX(-50%); }
     .fighter.girl { left: 73%; }
     .fighter svg { display: block; width: 100%; height: auto; }
+    .portrait { position: absolute; top: 7%; left: 50%; width: 35%; aspect-ratio: 1; overflow: hidden; border: 3px solid #252525; border-radius: 50%; background: white; transform: translateX(-50%); }
+    .portrait img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    .boy .portrait img { transform: scale(1.35) rotate(-90deg); }
+    .fighter-name { position: absolute; top: -36px; left: 50%; transform: translateX(-50%); color: #242424; font-size: clamp(17px, 2.4vw, 24px); font-weight: 800; white-space: nowrap; }
     .fighter.boy { cursor: pointer; }
     .fighter.boy:focus-visible { outline: 2px solid #444; outline-offset: 5px; }
     .attack-arm { transform-box: view-box; transform-origin: 80px 95px; }
@@ -61,28 +65,29 @@
   </main>
   <section class="scene" id="game" aria-label="男生和女生火柴人" tabindex="-1" hidden>
     <div class="arena">
-      <div class="fighter boy" id="boy" role="button" tabindex="0" aria-label="点击男生，让女生随机出拳">
-        <svg viewBox="0 0 160 240" role="img" aria-label="左边的男生火柴人">
+      <div class="fighter boy" id="boy" role="button" tabindex="0" aria-label="蒋雨龙，点击后谭馨雨随机出拳">
+        <span class="fighter-name">蒋雨龙</span>
+        <svg viewBox="0 0 160 240" aria-hidden="true">
           <g fill="none" stroke="#252525" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="80" cy="43" r="26" fill="#fff"/>
-            <path d="M59 24q20-16 42 0M80 70v91M80 95l-43 38M80 95l43 38M80 161l-37 69M80 161l37 69"/>
+            <path d="M80 70v91M80 95l-43 38M80 95l43 38M80 161l-37 69M80 161l37 69"/>
           </g>
         </svg>
+        <span class="portrait"><img src="jiang-yulong.jpg" alt=""></span>
       </div>
-      <div class="fighter girl">
-        <svg viewBox="0 0 160 240" role="img" aria-label="右边的女生火柴人">
+      <div class="fighter girl" role="img" aria-label="谭馨雨，右边的女生火柴人">
+        <span class="fighter-name">谭馨雨</span>
+        <svg viewBox="0 0 160 240" aria-hidden="true">
           <g fill="none" stroke="#252525" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M102 25q25 10 16 39"/>
-            <circle cx="80" cy="43" r="26" fill="#fff"/>
-            <path d="M61 24q20-15 39 0M80 70v60M80 95l43 38"/>
+            <path d="M80 70v60M80 95l43 38"/>
             <path class="attack-arm" d="M80 95l-43 38"/>
             <path d="M80 122 51 169h58Z" fill="#fff"/>
             <path d="M64 169 44 230M96 169l20 61"/>
           </g>
         </svg>
+        <span class="portrait"><img src="tan-xinyu.jpg" alt=""></span>
       </div>
     </div>
-    <p class="attack-note" id="attack-note" aria-live="polite">点击左边的男生</p>
+    <p class="attack-note" id="attack-note" aria-live="polite">点击蒋雨龙</p>
     <button class="back" id="back" type="button">返回首页</button>
   </section>
   <script>
@@ -115,7 +120,7 @@
       girl.style.setProperty('--travel', `${Math.max(0, move)}px`);
       attacking = true;
       girl.classList.add(attacks[index].className);
-      note.textContent = `女生使出${attacks[index].name}！`;
+      note.textContent = `谭馨雨使出${attacks[index].name}！`;
       timers.push(setTimeout(() => boy.classList.add('hit'), 360));
       timers.push(setTimeout(clearAttack, 900));
     }
@@ -129,7 +134,7 @@
     document.getElementById('start').addEventListener('click', () => {
       intro.hidden = true;
       game.hidden = false;
-      note.textContent = '点击左边的男生';
+      note.textContent = '点击蒋雨龙';
       game.focus();
     });
     document.getElementById('back').addEventListener('click', () => {
