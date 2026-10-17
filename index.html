@@ -29,6 +29,8 @@
     .portrait img { display: block; width: 100%; height: 100%; object-fit: cover; }
     .boy .portrait img { transform: scale(1.35) rotate(-90deg); }
     .fighter-name { position: absolute; top: -36px; left: 50%; transform: translateX(-50%); color: #242424; font-size: clamp(17px, 2.4vw, 24px); font-weight: 800; white-space: nowrap; }
+    .speech { position: absolute; z-index: 2; top: 6%; right: 80%; width: clamp(105px, 18vw, 170px); padding: 9px 10px; border: 2px solid #333; border-radius: 14px; background: #fff; color: #222; font-size: clamp(14px, 1.8vw, 18px); font-weight: 700; line-height: 1.4; box-shadow: 0 4px 10px #0002; animation: bubble-in 180ms ease-out; }
+    .speech::after { content: ""; position: absolute; top: 28%; left: 100%; border: 10px solid transparent; border-left-color: #333; }
     .fighter.boy { cursor: pointer; }
     .fighter.boy:focus-visible { outline: 2px solid #444; outline-offset: 5px; }
     .attack-arm { transform-box: view-box; transform-origin: 80px 95px; }
@@ -53,6 +55,7 @@
     @keyframes hook-arm { 0%, 25%, 100% { transform: rotate(0); } 45%, 65% { transform: rotate(70deg); } }
     @keyframes uppercut-arm { 0%, 25%, 100% { transform: rotate(0); } 45%, 65% { transform: rotate(110deg); } }
     @keyframes recoil { 0%, 100% { transform: translateX(-50%); } 40% { transform: translateX(calc(-50% - 18px)) rotate(-8deg); } }
+    @keyframes bubble-in { from { opacity: 0; transform: scale(.8); } to { opacity: 1; transform: scale(1); } }
     @media (max-width: 600px) { .title { font-size: clamp(52px, 15vw, 90px); } .start { min-width: 180px; } .fighter { width: clamp(95px, 28vw, 130px); } .arena { height: min(55vh, 410px); } }
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
   </style>
@@ -85,6 +88,7 @@
           </g>
         </svg>
         <span class="portrait"><img src="tan-xinyu.jpg" alt=""></span>
+        <span class="speech" id="speech" aria-live="polite" hidden></span>
       </div>
     </div>
     <p class="attack-note" id="attack-note" aria-live="polite">点击蒋雨龙</p>
@@ -96,6 +100,8 @@
     const boy = document.getElementById('boy');
     const girl = document.querySelector('.fighter.girl');
     const note = document.getElementById('attack-note');
+    const speech = document.getElementById('speech');
+    const phrases = ['被气的头晕', '我想砍人了', '老子拳头想喝血', '你真的是气死老娘了'];
     const attacks = [
       { className: 'straight', name: '直拳' },
       { className: 'hook', name: '摆拳' },
@@ -104,6 +110,16 @@
     let lastAttack = -1;
     let attacking = false;
     let timers = [];
+    let bubbleTimer;
+    function hideBubble() {
+      clearTimeout(bubbleTimer);
+      speech.hidden = true;
+    }
+    function showBubble() {
+      speech.textContent = phrases[Math.floor(Math.random() * phrases.length)];
+      speech.hidden = false;
+      bubbleTimer = setTimeout(() => { speech.hidden = true; }, 2400);
+    }
     function clearAttack() {
       timers.forEach(clearTimeout);
       timers = [];
@@ -113,6 +129,7 @@
     }
     function attack() {
       if (game.hidden || attacking) return;
+      hideBubble();
       const choices = attacks.map((_, index) => index).filter(index => index !== lastAttack);
       const index = choices[Math.floor(Math.random() * choices.length)];
       lastAttack = index;
@@ -122,7 +139,10 @@
       girl.classList.add(attacks[index].className);
       note.textContent = `谭馨雨使出${attacks[index].name}！`;
       timers.push(setTimeout(() => boy.classList.add('hit'), 360));
-      timers.push(setTimeout(clearAttack, 900));
+      timers.push(setTimeout(() => {
+        clearAttack();
+        if (!game.hidden) showBubble();
+      }, 900));
     }
     boy.addEventListener('click', attack);
     boy.addEventListener('keydown', event => {
@@ -134,11 +154,13 @@
     document.getElementById('start').addEventListener('click', () => {
       intro.hidden = true;
       game.hidden = false;
+      hideBubble();
       note.textContent = '点击蒋雨龙';
       game.focus();
     });
     document.getElementById('back').addEventListener('click', () => {
       clearAttack();
+      hideBubble();
       game.hidden = true;
       intro.hidden = false;
       document.getElementById('start').focus();
