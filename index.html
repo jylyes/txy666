@@ -20,24 +20,18 @@
     .start:hover, .start:focus-visible { transform: scale(1.07); background: #261048; box-shadow: 0 0 18px #40ecff, inset 0 0 24px #30eaff77, 0 0 60px #b82fff; outline: none; }
     .start:active { transform: scale(.96); }
     [hidden] { display: none !important; }
-    .scene { position: relative; z-index: 1; min-height: 100svh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px 15px; text-align: center; }
-    .scene-title { margin: 0 0 12px; color: #fff; font-size: clamp(25px, 4vw, 42px); letter-spacing: .16em; text-shadow: 0 0 12px #ff39b8, 0 0 28px #7235ff; }
-    .arena { position: relative; width: min(100%, 940px); height: clamp(300px, 55vh, 520px); overflow: hidden; border: 2px solid #a745ff; border-radius: 20px; background: radial-gradient(ellipse at 50% 12%, #6630a66b, transparent 53%), linear-gradient(#1b1237 0 66%, #2c1454 66%, #130b23 100%); box-shadow: 0 0 28px #a43bff88, inset 0 0 45px #0009; }
-    .arena::before { content: ""; position: absolute; inset: 66% 0 0; background: repeating-linear-gradient(0deg, transparent 0 34px, #b159ff55 35px 37px), repeating-linear-gradient(90deg, transparent 0 54px, #b159ff55 55px 57px); transform: perspective(200px) rotateX(28deg); transform-origin: top; }
-    .arena::after { content: "VS"; position: absolute; top: 12%; left: 50%; transform: translateX(-50%); color: #ffffff88; font-size: clamp(38px, 8vw, 90px); font-weight: 1000; font-style: italic; text-shadow: 0 0 22px #ff42c8; pointer-events: none; }
-    .fighter { position: absolute; bottom: 5%; left: 22%; width: clamp(105px, 22vw, 220px); transform: translateX(-50%); }
-    .fighter.girl { left: 78%; }
-    .fighter svg { display: block; width: 100%; height: auto; filter: drop-shadow(0 12px 10px #0009); animation: float 2s ease-in-out infinite alternate; }
-    .fighter.girl svg { animation-delay: -1s; }
-    .fighter-name { display: block; margin-top: -8px; color: white; font-size: clamp(17px, 2.5vw, 25px); font-weight: 900; text-shadow: 0 0 10px var(--accent); }
-    .back { margin-top: 18px; padding: 8px 16px; border: 0; background: transparent; color: #b7a7d6; font: inherit; cursor: pointer; }
-    .back:hover, .back:focus-visible { color: white; text-decoration: underline; }
+    .scene { position: relative; z-index: 1; min-height: 100svh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px 15px; background: #f6f6f6; text-align: center; }
+    .arena { position: relative; width: min(100%, 900px); height: clamp(300px, 60vh, 520px); border-bottom: 3px solid #444; }
+    .fighter { position: absolute; bottom: 0; left: 27%; width: clamp(105px, 18vw, 170px); transform: translateX(-50%); }
+    .fighter.girl { left: 73%; }
+    .fighter svg { display: block; width: 100%; height: auto; }
+    .back { margin-top: 24px; padding: 8px 16px; border: 0; background: transparent; color: #555; font: inherit; cursor: pointer; }
+    .back:hover, .back:focus-visible { color: #111; text-decoration: underline; }
     @keyframes rainbow { to { background-position: 300% 0; } }
     @keyframes rotate { to { transform: rotate(360deg); } }
     @keyframes breathe { to { transform: scale(1.2); opacity: .55; } }
     @keyframes flicker { 0%, 94%, 98%, 100% { opacity: 1; } 95%, 97% { opacity: .83; } }
-    @keyframes float { to { transform: translateY(-9px); } }
-    @media (max-width: 600px) { .title { font-size: clamp(52px, 15vw, 90px); } .start { min-width: 180px; } .fighter { width: clamp(104px, 32vw, 160px); } .arena { height: min(55vh, 410px); } }
+    @media (max-width: 600px) { .title { font-size: clamp(52px, 15vw, 90px); } .start { min-width: 180px; } .fighter { width: clamp(95px, 28vw, 130px); } .arena { height: min(55vh, 410px); } }
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
   </style>
 </head>
@@ -47,43 +41,26 @@
     <h1 class="title"><span>老子拳头</span><span>想喝血</span></h1>
     <button class="start" id="start" type="button">开始</button>
   </main>
-  <section class="scene" id="game" aria-labelledby="scene-title" hidden>
-    <h2 class="scene-title" id="scene-title" tabindex="-1">霓虹对决</h2>
-    <div class="arena" aria-label="对战场地，男生在左，女生在右">
-      <div class="fighter boy" id="boy" style="--accent:#42dfff">
-        <svg viewBox="0 0 220 280" role="img" aria-label="蓝色短发、穿蓝色外套的男生">
-          <defs><linearGradient id="boy-coat" x2="1" y2="1"><stop stop-color="#24c7ff"/><stop offset="1" stop-color="#424de8"/></linearGradient></defs>
-          <ellipse cx="110" cy="270" rx="68" ry="9" fill="#03020d88"/>
-          <path d="M72 207 62 263h38l11-58m37 2 11 56h-38l-11-58" fill="#202843" stroke="#12172a" stroke-width="5"/>
-          <path d="M85 115 53 131 41 203l39 13 19-54 11 12 11-12 19 54 39-13-12-72-32-16Z" fill="url(#boy-coat)" stroke="#142d77" stroke-width="5"/>
-          <path d="M98 115h24l13 39-25 28-25-28Z" fill="#f5f8ff"/><path d="M107 129h6l6 28-9 14-9-14Z" fill="#3151c9"/>
-          <path d="M50 198 31 211q-8 17 10 25l29-13 11-28Z M170 198l19 13q8 17-10 25l-29-13-11-28Z" fill="#ffc49f" stroke="#b77666" stroke-width="4"/>
-          <rect x="43" y="190" width="39" height="27" rx="10" fill="#20244e"/><rect x="138" y="190" width="39" height="27" rx="10" fill="#20244e"/>
-          <rect x="98" y="102" width="24" height="28" rx="9" fill="#f0ae88"/>
-          <ellipse cx="110" cy="74" rx="48" ry="52" fill="#ffc9a5" stroke="#b87a67" stroke-width="4"/>
-          <path d="M63 75Q47 14 102 14q62-9 62 56l-21-15-10-18q-29 25-68 25Z" fill="#182442" stroke="#10192d" stroke-width="5"/>
-          <path d="M83 81q9-7 17 0m20 0q9-7 17 0" fill="none" stroke="#24304c" stroke-width="5" stroke-linecap="round"/><path d="M100 102q10 8 20 0" fill="none" stroke="#a65363" stroke-width="4" stroke-linecap="round"/>
-          <path d="M59 139 47 191m114-52 12 52" stroke="#8deeff" stroke-width="5" stroke-linecap="round"/>
+  <section class="scene" id="game" aria-label="男生和女生火柴人" tabindex="-1" hidden>
+    <div class="arena">
+      <div class="fighter boy">
+        <svg viewBox="0 0 160 240" role="img" aria-label="左边的男生火柴人">
+          <g fill="none" stroke="#252525" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="80" cy="43" r="26" fill="#fff"/>
+            <path d="M59 24q20-16 42 0M80 70v91M80 95l-43 38M80 95l43 38M80 161l-37 69M80 161l37 69"/>
+          </g>
         </svg>
-        <span class="fighter-name">男生</span>
       </div>
-      <div class="fighter girl" id="girl" style="--accent:#ff65c8">
-        <svg viewBox="0 0 220 280" role="img" aria-label="粉色长发、穿紫色外套的女生">
-          <defs><linearGradient id="girl-coat" x2="1" y2="1"><stop stop-color="#ff67c1"/><stop offset="1" stop-color="#823cff"/></linearGradient></defs>
-          <ellipse cx="110" cy="270" rx="68" ry="9" fill="#03020d88"/>
-          <path d="M73 205 61 263h38l12-55m37-3 11 58h-38l-11-55" fill="#312246" stroke="#1b1231" stroke-width="5"/>
-          <path d="M58 68Q53 10 111 10q60 0 54 61l15 125-40 10-14-106H94L80 206l-40-10Z" fill="#ea5eaa" stroke="#8f2b80" stroke-width="5"/>
-          <path d="M85 115 53 133 41 203l38 14 18-55 13 11 13-11 18 55 38-14-12-70-32-18Z" fill="url(#girl-coat)" stroke="#672c9c" stroke-width="5"/>
-          <path d="M98 115h24l13 39-25 29-25-29Z" fill="#fff1fa"/><path d="M103 129h14l-7 34Z" fill="#ed57a9"/>
-          <path d="M50 198 31 211q-8 17 10 25l29-13 11-28Z M170 198l19 13q8 17-10 25l-29-13-11-28Z" fill="#ffd0ae" stroke="#b67b72" stroke-width="4"/>
-          <rect x="43" y="190" width="39" height="27" rx="10" fill="#6b288d"/><rect x="138" y="190" width="39" height="27" rx="10" fill="#6b288d"/>
-          <rect x="98" y="103" width="24" height="27" rx="9" fill="#f6b794"/>
-          <ellipse cx="110" cy="75" rx="43" ry="51" fill="#ffd2b0" stroke="#b98170" stroke-width="4"/>
-          <path d="M68 69Q55 28 100 19q42-9 59 30l-8 22q-23-5-42-31-10 24-41 29Z" fill="#e7529f" stroke="#9b337d" stroke-width="4"/>
-          <path d="M86 82q8-6 16 0m18 0q8-6 16 0" fill="none" stroke="#693257" stroke-width="5" stroke-linecap="round"/><path d="M100 102q10 8 20 0" fill="none" stroke="#ae536c" stroke-width="4" stroke-linecap="round"/>
-          <path d="M60 141 48 192m112-51 12 51" stroke="#ffabe8" stroke-width="5" stroke-linecap="round"/>
+      <div class="fighter girl">
+        <svg viewBox="0 0 160 240" role="img" aria-label="右边的女生火柴人">
+          <g fill="none" stroke="#252525" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M102 25q25 10 16 39"/>
+            <circle cx="80" cy="43" r="26" fill="#fff"/>
+            <path d="M61 24q20-15 39 0M80 70v60M80 95l-43 38M80 95l43 38"/>
+            <path d="M80 122 51 169h58Z" fill="#fff"/>
+            <path d="M64 169 44 230M96 169l20 61"/>
+          </g>
         </svg>
-        <span class="fighter-name">女生</span>
       </div>
     </div>
     <button class="back" id="back" type="button">返回首页</button>
@@ -94,7 +71,7 @@
     document.getElementById('start').addEventListener('click', () => {
       intro.hidden = true;
       game.hidden = false;
-      document.getElementById('scene-title').focus();
+      game.focus();
     });
     document.getElementById('back').addEventListener('click', () => {
       game.hidden = true;
