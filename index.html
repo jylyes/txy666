@@ -25,12 +25,30 @@
     .fighter { position: absolute; bottom: 0; left: 27%; width: clamp(105px, 18vw, 170px); transform: translateX(-50%); }
     .fighter.girl { left: 73%; }
     .fighter svg { display: block; width: 100%; height: auto; }
+    .fighter.boy { cursor: pointer; }
+    .fighter.boy:focus-visible { outline: 2px solid #444; outline-offset: 5px; }
+    .attack-arm { transform-box: view-box; transform-origin: 80px 95px; }
+    .girl.straight { animation: straight 850ms ease-in-out; }
+    .girl.hook { animation: hook 850ms ease-in-out; }
+    .girl.uppercut { animation: uppercut 850ms ease-in-out; }
+    .girl.straight .attack-arm { animation: jab-arm 850ms ease-in-out; }
+    .girl.hook .attack-arm { animation: hook-arm 850ms ease-in-out; }
+    .girl.uppercut .attack-arm { animation: uppercut-arm 850ms ease-in-out; }
+    .boy.hit { animation: recoil 420ms ease-out; }
+    .attack-note { min-height: 1.5em; margin: 16px 0 0; color: #333; font-size: 18px; }
     .back { margin-top: 24px; padding: 8px 16px; border: 0; background: transparent; color: #555; font: inherit; cursor: pointer; }
     .back:hover, .back:focus-visible { color: #111; text-decoration: underline; }
     @keyframes rainbow { to { background-position: 300% 0; } }
     @keyframes rotate { to { transform: rotate(360deg); } }
     @keyframes breathe { to { transform: scale(1.2); opacity: .55; } }
     @keyframes flicker { 0%, 94%, 98%, 100% { opacity: 1; } 95%, 97% { opacity: .83; } }
+    @keyframes straight { 0%, 100% { transform: translateX(-50%); } 40%, 62% { transform: translateX(calc(-50% - var(--travel))); } }
+    @keyframes hook { 0%, 100% { transform: translateX(-50%); } 38%, 65% { transform: translateX(calc(-50% - var(--travel))) rotate(-9deg); } }
+    @keyframes uppercut { 0%, 100% { transform: translateX(-50%); } 40%, 65% { transform: translateX(calc(-50% - var(--travel))) translateY(-25px) rotate(5deg); } }
+    @keyframes jab-arm { 0%, 25%, 100% { transform: rotate(0); } 45%, 65% { transform: rotate(40deg) scale(1.35); } }
+    @keyframes hook-arm { 0%, 25%, 100% { transform: rotate(0); } 45%, 65% { transform: rotate(70deg); } }
+    @keyframes uppercut-arm { 0%, 25%, 100% { transform: rotate(0); } 45%, 65% { transform: rotate(110deg); } }
+    @keyframes recoil { 0%, 100% { transform: translateX(-50%); } 40% { transform: translateX(calc(-50% - 18px)) rotate(-8deg); } }
     @media (max-width: 600px) { .title { font-size: clamp(52px, 15vw, 90px); } .start { min-width: 180px; } .fighter { width: clamp(95px, 28vw, 130px); } .arena { height: min(55vh, 410px); } }
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
   </style>
@@ -43,7 +61,7 @@
   </main>
   <section class="scene" id="game" aria-label="男生和女生火柴人" tabindex="-1" hidden>
     <div class="arena">
-      <div class="fighter boy">
+      <div class="fighter boy" id="boy" role="button" tabindex="0" aria-label="点击男生，让女生随机出拳">
         <svg viewBox="0 0 160 240" role="img" aria-label="左边的男生火柴人">
           <g fill="none" stroke="#252525" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="80" cy="43" r="26" fill="#fff"/>
@@ -56,24 +74,66 @@
           <g fill="none" stroke="#252525" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
             <path d="M102 25q25 10 16 39"/>
             <circle cx="80" cy="43" r="26" fill="#fff"/>
-            <path d="M61 24q20-15 39 0M80 70v60M80 95l-43 38M80 95l43 38"/>
+            <path d="M61 24q20-15 39 0M80 70v60M80 95l43 38"/>
+            <path class="attack-arm" d="M80 95l-43 38"/>
             <path d="M80 122 51 169h58Z" fill="#fff"/>
             <path d="M64 169 44 230M96 169l20 61"/>
           </g>
         </svg>
       </div>
     </div>
+    <p class="attack-note" id="attack-note" aria-live="polite">点击左边的男生</p>
     <button class="back" id="back" type="button">返回首页</button>
   </section>
   <script>
     const intro = document.getElementById('intro');
     const game = document.getElementById('game');
+    const boy = document.getElementById('boy');
+    const girl = document.querySelector('.fighter.girl');
+    const note = document.getElementById('attack-note');
+    const attacks = [
+      { className: 'straight', name: '直拳' },
+      { className: 'hook', name: '摆拳' },
+      { className: 'uppercut', name: '上勾拳' }
+    ];
+    let lastAttack = -1;
+    let attacking = false;
+    let timers = [];
+    function clearAttack() {
+      timers.forEach(clearTimeout);
+      timers = [];
+      girl.classList.remove('straight', 'hook', 'uppercut');
+      boy.classList.remove('hit');
+      attacking = false;
+    }
+    function attack() {
+      if (game.hidden || attacking) return;
+      const choices = attacks.map((_, index) => index).filter(index => index !== lastAttack);
+      const index = choices[Math.floor(Math.random() * choices.length)];
+      lastAttack = index;
+      const move = girl.getBoundingClientRect().left - boy.getBoundingClientRect().left - boy.getBoundingClientRect().width * 0.6;
+      girl.style.setProperty('--travel', `${Math.max(0, move)}px`);
+      attacking = true;
+      girl.classList.add(attacks[index].className);
+      note.textContent = `女生使出${attacks[index].name}！`;
+      timers.push(setTimeout(() => boy.classList.add('hit'), 360));
+      timers.push(setTimeout(clearAttack, 900));
+    }
+    boy.addEventListener('click', attack);
+    boy.addEventListener('keydown', event => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        attack();
+      }
+    });
     document.getElementById('start').addEventListener('click', () => {
       intro.hidden = true;
       game.hidden = false;
+      note.textContent = '点击左边的男生';
       game.focus();
     });
     document.getElementById('back').addEventListener('click', () => {
+      clearAttack();
       game.hidden = true;
       intro.hidden = false;
       document.getElementById('start').focus();
